@@ -1,20 +1,32 @@
 package main;
 
-import javax.swing.plaf.synth.SynthUI;
+import entities.Player;
+
+import java.awt.*;
 
 public class Game implements Runnable {
+
 	private GameWindow gameWindow;
 	private GamePanel gamePanel;
 	private Thread gameThread;
 	private final int FPS_SET = 120;
 	private final int UPS_SET = 200;
 
+	private Player player;
+
 	public Game() {
-		gamePanel = new GamePanel();
+		initializeClasses();
+
+		gamePanel = new GamePanel(this);
 		gameWindow = new GameWindow(gamePanel);
 		gamePanel.setFocusable(true);
 		gamePanel.requestFocus();
+
 		startGameLoop();
+	}
+
+	private void initializeClasses() {
+		player = new Player(200, 200);
 	}
 
 	private void startGameLoop() {
@@ -23,7 +35,11 @@ public class Game implements Runnable {
 	}
 
 	public void update() {
-		gamePanel.updateGame();
+		player.update();
+	}
+
+	public void render(Graphics graphics) {
+		player.render(graphics);
 	}
 
 	@Override
@@ -59,7 +75,6 @@ public class Game implements Runnable {
 				deltaF--;
 			}
 
-
 			if (System.currentTimeMillis() - lastCheck >= 1000) {
 				lastCheck = System.currentTimeMillis();
 				System.out.println("FPS: " + frames + " | UPS: " + updates);
@@ -67,5 +82,13 @@ public class Game implements Runnable {
 				updates = 0;
 			}
 		}
+	}
+
+	public Player getPlayer() {
+		return player;
+	}
+
+	public void windowFocusLost() {
+		player.resetDirectionsBooleans();
 	}
 }
