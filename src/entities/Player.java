@@ -1,21 +1,18 @@
 package entities;
 
-import javax.imageio.ImageIO;
+import utils.LoadSave;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.InputStream;
 
-import static utils.Constants.Directions.*;
-import static utils.Constants.Directions.DOWN;
 import static utils.Constants.PlayerConstants.*;
 
 public class Player extends Entity {
 
 	private BufferedImage[][] animations;
-	private int animationTick;
-	private int animationIndex;
-	private int animationSpeed = 30;
+	private int animationTick = 25;
+	private int animationIndex = 25;
+	private int animationSpeed = 25;
 	private int playerAction = IDLE;
 	private boolean playerIsMoving = false;
 	private boolean playerIsAttacking = false;
@@ -23,10 +20,10 @@ public class Player extends Entity {
 	private boolean right;
 	private boolean up;
 	private boolean down;
-	private float playerSpeed = 2.0f;
+	private float playerSpeed = 1.5f;
 
-	public Player(float x, float y) {
-		super(x, y);
+	public Player(float x, float y, int width, int height) {
+		super(x, y, width, height);
 		loadAnimations();
 	}
 
@@ -39,8 +36,7 @@ public class Player extends Entity {
 	public void render(Graphics graphics) {
 		graphics.drawImage(
 				animations[playerAction][animationIndex],
-				(int) x, (int) y,
-				256, 160, null);
+				(int) x, (int) y, width, height, null);
 	}
 
 	private void updatePosition() {
@@ -96,9 +92,7 @@ public class Player extends Entity {
 	}
 
 	private void loadAnimations() {
-		InputStream is = getClass().getResourceAsStream("/player_sprites.png");
-		try {
-			BufferedImage image = ImageIO.read(is);
+			BufferedImage image = LoadSave.getSpriteAtlas(LoadSave.PLAYER_ATLAS);
 
 			animations = new BufferedImage[9][6];
 			for (int j = 0; j < animations.length; j++) {
@@ -106,17 +100,6 @@ public class Player extends Entity {
 					animations[j][i] = image.getSubimage(i * 64, j * 40, 64, 40);
 				}
 			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				is.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-
-
 	}
 
 	private void setAnimation() {
