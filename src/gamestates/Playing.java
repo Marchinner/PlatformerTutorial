@@ -71,7 +71,7 @@ public class Playing extends State implements Statemethods {
         }
 
         if (xLevelOffset > maxLevelOffsetX) {
-            xLevelOffset = maxTilesOffset;
+            xLevelOffset = maxLevelOffsetX;
         } else if (xLevelOffset < 0) {
             xLevelOffset = 0;
         }
