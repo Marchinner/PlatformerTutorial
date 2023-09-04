@@ -12,8 +12,8 @@ import static utils.HelpMethods.*;
 public class Player extends Entity {
 
 	private BufferedImage[][] animations;
-	private int animationTick = 25;
-	private int animationIndex = 25;
+	private int animationTick;
+	private int animationIndex;
 	private int animationSpeed = 25;
 	private int playerAction = IDLE;
 	private boolean playerIsMoving = false;
@@ -23,7 +23,7 @@ public class Player extends Entity {
 	private boolean up;
 	private boolean down;
 	private boolean jump;
-	private float playerSpeed = Game.SCALE;
+	private float playerSpeed = 1.0f * Game.SCALE;
 	private int[][] levelData;
 	private float xDrawOffset = 21 * Game.SCALE;
 	private float yDrawOffset = 4 * Game.SCALE;
