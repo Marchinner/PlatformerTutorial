@@ -9,6 +9,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.SimpleTimeZone;
 
 import static utils.Constants.EnemyConstants.CRABBY;
 
@@ -28,6 +29,7 @@ public class LoadSave {
 	public static final String PLAYING_BACKGROUND_IMG = "playing_bg_img.png";
 	public static final String BIG_CLOUDS = "big_clouds.png";
 	public static final String SMALL_CLOUDS = "small_clouds.png";
+	public static final String STATUS_BAR = "health_power_bar.png";
 
 	public static BufferedImage getSpriteAtlas(String fileName) {
 		BufferedImage image = null;
