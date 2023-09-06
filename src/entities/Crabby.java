@@ -44,10 +44,11 @@ public class Crabby extends Enemy{
             switch (enemyState) {
                 case IDLE -> newState(RUNNING);
                 case RUNNING -> {
-                    if (canSeePlayer(levelData, player))
+                    if (canSeePlayer(levelData, player)) {
                         turnTowardsPlayer(player);
-                    if (isPlayerCloseForAttack(player))
-                        newState(ATTACK);
+                        if (isPlayerCloseForAttack(player))
+                            newState(ATTACK);
+                    }
 
                     move(levelData);
                 }

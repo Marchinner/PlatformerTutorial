@@ -5,6 +5,7 @@ import entities.Player;
 import levels.LevelManager;
 import main.Game;
 import ui.GameOverOverlay;
+import ui.LevelCompletedOverlay;
 import ui.PauseOverlay;
 import utils.LoadSave;
 
@@ -26,6 +27,7 @@ public class Playing extends State implements Statemethods {
     private PauseOverlay pauseOverlay;
     private boolean paused = false;
     private GameOverOverlay gameOverOverlay;
+    private LevelCompletedOverlay levelCompletedOverlay;
 
     private int xLevelOffset;
     private int leftBorder = (int) (0.2 * Game.GAME_WIDTH);
