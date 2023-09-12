@@ -23,7 +23,7 @@ public class LevelCompletedOverlay {
 
     public LevelCompletedOverlay(Playing playing) {
         this.playing = playing;
-        initalizeImg();
+        initializeImg();
         initializeButtons();
     }
 
@@ -36,7 +36,7 @@ public class LevelCompletedOverlay {
 
     }
 
-    private void initalizeImg() {
+    private void initializeImg() {
         img = LoadSave.getSpriteAtlas(LoadSave.COMPLETED_LEVEL_IMG);
         backgroundWidth = (int) (img.getWidth() * Game.SCALE);
         backgroundHeight = (int) (img.getHeight() * Game.SCALE);
@@ -46,22 +46,51 @@ public class LevelCompletedOverlay {
     }
 
     public void update() {
+        next.update();
+        menu.update();
+    }
 
+    private boolean isIn(UrmButton button, MouseEvent e) {
+        return button.getBounds().contains(e.getX(), e.getY());
     }
 
     public void draw(Graphics graphics) {
         graphics.drawImage(img, backgroundX, backgroundY, backgroundWidth, backgroundHeight, null);
+        next.draw(graphics);
+        menu.draw(graphics);
     }
 
     public void mouseMoved(MouseEvent e) {
+        next.setMouseOver(false);
+        menu.setMouseOver(false);
 
+        if (isIn(menu, e)) {
+            menu.setMouseOver(true);
+        } else if (isIn(next, e)) {
+            next.setMouseOver(true);
+        }
     }
 
-    public void mouseRelease(MouseEvent e) {
+    public void mouseReleased(MouseEvent e) {
+        if (isIn(menu, e)) {
+            if (menu.isMousePressed()) {
+                System.out.println("Menu!");
+            }
+        } else if (isIn(next, e)) {
+            if (next.isMousePressed()) {
+                System.out.println("Next!");
+            }
+        }
 
+        menu.resetBooleans();
+        next.resetBooleans();
     }
 
     public void mousePressed(MouseEvent e) {
-
+        if (isIn(menu, e)) {
+            menu.setMousePressed(true);
+        } else if (isIn(next, e)) {
+            next.setMousePressed(true);
+        }
     }
 }

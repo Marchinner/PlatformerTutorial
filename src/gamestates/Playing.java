@@ -43,6 +43,7 @@ public class Playing extends State implements Statemethods {
     private Random rnd = new Random();
 
     private boolean gameOver = false;
+    private boolean levelCompleted = true;
 
     public Playing(Game game) {
         super(game);
@@ -64,6 +65,7 @@ public class Playing extends State implements Statemethods {
         player.loadLevelData(levelManager.getCurrentLevel().getLevelData());
         pauseOverlay = new PauseOverlay(this);
         gameOverOverlay = new GameOverOverlay(this);
+        levelCompletedOverlay = new LevelCompletedOverlay(this);
     }
 
     public void unpauseGame() {
@@ -80,13 +82,15 @@ public class Playing extends State implements Statemethods {
 
     @Override
     public void update() {
-        if (!paused && !gameOver) {
+        if (paused) {
+            pauseOverlay.update();
+        } else if (levelCompleted) {
+            levelCompletedOverlay.update();
+        } else if (!gameOver) {
             levelManager.update();
             player.update();
             enemyManager.update(levelManager.getCurrentLevel().getLevelData(), player);
             checkCloseToBorder();
-        } else {
-            pauseOverlay.update();
         }
     }
 
@@ -124,6 +128,8 @@ public class Playing extends State implements Statemethods {
             pauseOverlay.draw(graphics);
         } else if (gameOver) {
             gameOverOverlay.draw(graphics);
+        } else if (levelCompleted) {
+            levelCompletedOverlay.draw(graphics);
         }
     }
 
@@ -163,25 +169,35 @@ public class Playing extends State implements Statemethods {
 
     @Override
     public void mousePressed(MouseEvent e) {
-        if (paused) {
-            pauseOverlay.mousePressed(e);
+        if (!gameOver) {
+            if (paused) {
+                pauseOverlay.mousePressed(e);
+            } else if (levelCompleted) {
+                levelCompletedOverlay.mousePressed(e);
+            }
         }
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        if (!gameOver)
+        if (!gameOver) {
             if (paused) {
                 pauseOverlay.mouseReleased(e);
+            } else if (levelCompleted) {
+                levelCompletedOverlay.mouseReleased(e);
             }
+        }
     }
 
     @Override
     public void mouseMoved(MouseEvent e) {
-        if (!gameOver)
+        if (!gameOver) {
             if (paused) {
                 pauseOverlay.mouseMoved(e);
+            } else if (levelCompleted) {
+                levelCompletedOverlay.mouseMoved(e);
             }
+        }
     }
 
     @Override
