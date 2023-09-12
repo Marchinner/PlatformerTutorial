@@ -1,23 +1,33 @@
 package levels;
 
+import gamestates.Gamestate;
 import main.Game;
 import utils.LoadSave;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
-import static main.Game.TILES_IN_WIDTH;
 import static main.Game.TILES_SIZE;
 
 public class LevelManager {
 	private Game game;
 	private BufferedImage[] levelSprite;
-	private Level levelOne;
+	private ArrayList<Level> levels;
+	private int levelIndex = 0;
 
 	public LevelManager(Game game) {
 		this.game = game;
 		importOutsideSprites();
-		levelOne = new Level(LoadSave.getLevelData());
+		levels = new ArrayList<>();
+		buildAllLevels();
+	}
+
+	private void buildAllLevels() {
+		BufferedImage[] allLevels = LoadSave.getAllLevels();
+		for (BufferedImage img : allLevels) {
+			levels.add(new Level(img));
+		}
 	}
 
 	private void importOutsideSprites() {
@@ -34,8 +44,8 @@ public class LevelManager {
 
 	public void draw(Graphics graphics, int levelOffset) {
 		for (int j = 0; j < Game.TILES_IN_HEIGHT; j++) {
-			for (int i = 0; i < levelOne.getLevelData()[0].length; i++) {
-				int index = levelOne.getSpriteIndex(i, j);
+			for (int i = 0; i < levels.get(levelIndex).getLevelData()[0].length; i++) {
+				int index = levels.get(levelIndex).getSpriteIndex(i, j);
 				graphics.drawImage(levelSprite[index], TILES_SIZE * i - levelOffset, TILES_SIZE * j, TILES_SIZE, TILES_SIZE, null);
 			}
 		}
@@ -46,6 +56,25 @@ public class LevelManager {
 	}
 
 	public Level getCurrentLevel() {
-		return levelOne;
+		return levels.get(levelIndex);
+	}
+
+	public int getAmountOfLevels() {
+		return levels.size();
+	}
+
+	public void loadNextLevel() {
+		levelIndex++;
+
+		if (levelIndex >= levels.size()) {
+			levelIndex = 0;
+			System.out.println("GAME COMPLETED!");
+			Gamestate.state = Gamestate.MENU;
+		}
+
+		Level newLevel = levels.get(levelIndex);
+		game.getPlaying().getEnemyManager().loadEnemies(newLevel);
+		game.getPlaying().getPlayer().loadLevelData(newLevel.getLevelData());
+		game.getPlaying().setMaxLevelOffset(newLevel.getLevelOffset());
 	}
 }
